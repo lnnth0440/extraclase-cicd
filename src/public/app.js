@@ -11,6 +11,15 @@ const pageSubtitle =
 const navItems =
   document.querySelectorAll(".nav-item");
 
+const sidebar =
+  document.getElementById("sidebar");
+
+const sidebarOverlay =
+  document.getElementById("sidebarOverlay");
+
+const btnMenuMobile =
+  document.getElementById("btnMenuMobile");
+
 const sections =
   document.querySelectorAll(".page-section");
 
@@ -161,6 +170,77 @@ function cerrarModal(modal) {
    NAVEGACIÓN
 ====================================================== */
 
+function abrirMenuMobile() {
+  sidebar.classList.add("open");
+
+  sidebarOverlay.classList.add(
+    "active"
+  );
+
+  document.body.classList.add(
+    "menu-open"
+  );
+
+  btnMenuMobile.setAttribute(
+    "aria-expanded",
+    "true"
+  );
+}
+
+
+function cerrarMenuMobile() {
+  sidebar.classList.remove("open");
+
+  sidebarOverlay.classList.remove(
+    "active"
+  );
+
+  document.body.classList.remove(
+    "menu-open"
+  );
+
+  btnMenuMobile.setAttribute(
+    "aria-expanded",
+    "false"
+  );
+}
+
+
+function toggleMenuMobile() {
+  if (
+    sidebar.classList.contains("open")
+  ) {
+    cerrarMenuMobile();
+
+    return;
+  }
+
+  abrirMenuMobile();
+}
+
+
+btnMenuMobile.addEventListener(
+  "click",
+  toggleMenuMobile
+);
+
+
+sidebarOverlay.addEventListener(
+  "click",
+  cerrarMenuMobile
+);
+
+
+window.addEventListener(
+  "resize",
+  () => {
+    if (window.innerWidth > 900) {
+      cerrarMenuMobile();
+    }
+  }
+);
+
+
 function cambiarSeccion(nombre) {
   sections.forEach((section) => {
     section.classList.remove("active");
@@ -225,6 +305,8 @@ navItems.forEach((item) => {
       cambiarSeccion(
         item.dataset.section
       );
+
+      cerrarMenuMobile();
     }
   );
 });
@@ -345,11 +427,17 @@ function renderTrabajosRecientes(
 
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Tipo"
+            >
               ${trabajo.tipo}
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Entrega"
+            >
               ${
                 formatearFecha(
                   trabajo.fechaEntrega
@@ -357,7 +445,10 @@ function renderTrabajosRecientes(
               }
             </div>
 
-            <div>
+            <div
+              class="mobile-field"
+              data-label="Estado"
+            >
 
               <span
                 class="status ${
@@ -371,7 +462,10 @@ function renderTrabajosRecientes(
 
             </div>
 
-            <div class="row-actions">
+            <div
+              class="row-actions mobile-field"
+              data-label="Acciones"
+            >
 
               <button
                 class="action-btn"
@@ -506,11 +600,17 @@ function renderTrabajos(trabajos) {
 
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Tipo"
+            >
               ${trabajo.tipo}
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Precio"
+            >
               ${
                 formatearPrecio(
                   trabajo.precio
@@ -518,7 +618,10 @@ function renderTrabajos(trabajos) {
               }
             </div>
 
-            <div>
+            <div
+              class="mobile-field"
+              data-label="Estado"
+            >
 
               <span
                 class="status ${
@@ -532,7 +635,10 @@ function renderTrabajos(trabajos) {
 
             </div>
 
-            <div class="row-actions">
+            <div
+              class="row-actions mobile-field"
+              data-label="Acciones"
+            >
 
               <button
                 class="action-btn"
@@ -1166,18 +1272,27 @@ function renderClientes(clientes) {
 
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Teléfono"
+            >
               ${cliente.telefono}
             </div>
 
-            <div class="row-info">
+            <div
+              class="row-info mobile-field"
+              data-label="Correo"
+            >
               ${
                 cliente.correo ||
                 "Sin correo"
               }
             </div>
 
-            <div class="row-actions">
+            <div
+              class="row-actions mobile-field"
+              data-label="Acciones"
+            >
 
               <button
                 class="action-btn"
@@ -1579,6 +1694,8 @@ document.addEventListener(
         .forEach((modal) => {
           cerrarModal(modal);
         });
+
+      cerrarMenuMobile();
     }
   }
 );
