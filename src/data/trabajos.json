@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "nombre": "Cocina integral",
+    "cliente": "Carlos  Hernández",
+    "tipo": "Cocina",
+    "fechaInicio": "2026-08-10",
+    "fechaEntrega": "2026-08-25",
+    "precio": 450000,
+    "estado": "En proceso",
+    "descripcion": "Cocina personalizada para vivienda, incluye muebles superiores e inferiores."
+  },
+  {
+    "id": 2,
+    "nombre": "Closet principal",
+    "cliente": "María Pérez",
+    "tipo": "Closet",
+    "fechaInicio": "2026-08-15",
+    "fechaEntrega": "2026-08-30",
+    "precio": 280000,
+    "estado": "Pendiente",
+    "descripcion": "Closet de madera con divisiones internas y espacio para zapatos."
+  },
+  {
+    "id": 3,
+    "nombre": "Mesa de comedor",
+    "cliente": "José Rodríguez",
+    "tipo": "Mesa",
+    "fechaInicio": "2026-08-05",
+    "fechaEntrega": "2026-08-18",
+    "precio": 150000,
+    "estado": "Completado",
+    "descripcion": "Mesa de comedor para seis personas."
+  },
+  {
+    "id": 4,
+    "nombre": "Puerta principal",
+    "cliente": "Ana Vargas",
+    "tipo": "Puerta",
+    "fechaInicio": "2026-08-19",
+    "fechaEntrega": "2026-08-28",
+    "precio": 210000,
+    "estado": "En proceso",
+    "descripcion": "Puerta principal de madera sólida con acabado oscuro y diseño personalizado para vivienda."
+  },
+  {
+    "id": 5,
+    "nombre": "Mesa de comedor",
+    "cliente": "Roberto Castro",
+    "tipo": "Mesa",
+    "fechaInicio": "2026-08-14",
+    "fechaEntrega": "2026-09-03",
+    "precio": 210000,
+    "estado": "Pendiente",
+    "descripcion": "Mesa de comedor para seis personas en madera natural con acabado mate."
+  }
+]

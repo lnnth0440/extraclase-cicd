@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Gestión de Ebanistería</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-mark">E</div>
+
+        <div>
+          <h1>Ebanistería</h1>
+          <span>Gestión interna</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+
+        <button
+          class="nav-item active"
+          data-section="dashboard"
+        >
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </button>
+
+        <button
+          class="nav-item"
+          data-section="trabajos"
+        >
+          <span class="nav-icon">▣</span>
+          Trabajos
+        </button>
+
+        <button
+          class="nav-item"
+          data-section="clientes"
+        >
+          <span class="nav-icon">♙</span>
+          Clientes
+        </button>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>Extraclase CI/CD</span>
+        <small>Programación IV</small>
+      </div>
+
+    </aside>
+
+
+    <!-- CONTENIDO -->
+    <main class="main-content">
+
+      <header class="topbar">
+
+        <div>
+          <p class="section-label">
+            SISTEMA DE GESTIÓN
+          </p>
+
+          <h2 id="pageTitle">
+            Dashboard
+          </h2>
+
+          <p
+            id="pageSubtitle"
+            class="page-subtitle"
+          >
+            Resumen general de la ebanistería
+          </p>
+        </div>
+
+      </header>
+
+
+      <!-- DASHBOARD -->
+      <section
+        id="dashboard"
+        class="page-section active"
+      >
+
+        <div class="welcome-card">
+
+          <div>
+
+            <span class="eyebrow">
+              PANEL PRINCIPAL
+            </span>
+
+            <h3>
+              Control de trabajos de la ebanistería
+            </h3>
+
+            <p>
+              Consulta el estado de los proyectos,
+              fechas previstas de entrega y trabajos
+              recientes desde un solo lugar.
+            </p>
+
+          </div>
+
+          <div class="welcome-symbol">
+            🪵
+          </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+          <article class="stat-card">
+
+            <div>
+              <span class="stat-label">
+                Trabajos totales
+              </span>
+
+              <strong id="statTotal">
+                0
+              </strong>
+            </div>
+
+            <div class="stat-decoration">
+              ▣
+            </div>
+
+          </article>
+
+
+          <article class="stat-card">
+
+            <div>
+              <span class="stat-label">
+                Pendientes
+              </span>
+
+              <strong id="statPendientes">
+                0
+              </strong>
+            </div>
+
+            <span class="status status-pendiente">
+              Pendiente
+            </span>
+
+          </article>
+
+
+          <article class="stat-card">
+
+            <div>
+              <span class="stat-label">
+                En proceso
+              </span>
+
+              <strong id="statProceso">
+                0
+              </strong>
+            </div>
+
+            <span class="status status-proceso">
+              En proceso
+            </span>
+
+          </article>
+
+
+          <article class="stat-card">
+
+            <div>
+              <span class="stat-label">
+                Completados
+              </span>
+
+              <strong id="statCompletados">
+                0
+              </strong>
+            </div>
+
+            <span class="status status-completado">
+              Completado
+            </span>
+
+          </article>
+
+
+          <article class="stat-card">
+
+            <div>
+              <span class="stat-label">
+                Cancelados
+              </span>
+
+              <strong id="statCancelados">
+                0
+              </strong>
+            </div>
+
+            <span class="status status-cancelado">
+              Cancelado
+            </span>
+
+          </article>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <div>
+              <h3>
+                Trabajos recientes
+              </h3>
+
+              <p>
+                Últimos proyectos registrados
+              </p>
+            </div>
+
+            <button
+              id="btnVerTodosTrabajos"
+              class="btn btn-secondary"
+            >
+              Ver todos
+            </button>
+
+          </div>
+
+          <div
+            id="dashboardTrabajos"
+            class="trabajos-list"
+          >
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TRABAJOS -->
+      <section
+        id="trabajos"
+        class="page-section"
+      >
+
+        <div class="toolbar">
+
+          <div class="search-box">
+
+            <input
+              id="buscarTrabajo"
+              type="search"
+              placeholder="Buscar por trabajo o cliente..."
+            />
+
+          </div>
+
+
+          <select
+            id="filtroEstado"
+            class="filter-select"
+          >
+
+            <option value="">
+              Todos los estados
+            </option>
+
+            <option value="Pendiente">
+              Pendientes
+            </option>
+
+            <option value="En proceso">
+              En proceso
+            </option>
+
+            <option value="Completado">
+              Completados
+            </option>
+
+            <option value="Cancelado">
+              Cancelados
+            </option>
+
+          </select>
+
+
+          <button
+            id="btnNuevoTrabajo"
+            class="btn btn-primary"
+          >
+            + Nuevo trabajo
+          </button>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <div>
+              <h3>
+                Trabajos
+              </h3>
+
+              <p>
+                Administra los proyectos registrados
+              </p>
+            </div>
+
+          </div>
+
+          <div
+            id="listaTrabajos"
+            class="trabajos-list"
+          >
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CLIENTES -->
+      <section
+        id="clientes"
+        class="page-section"
+      >
+
+        <div class="toolbar">
+
+          <div>
+            <h3>
+              Clientes registrados
+            </h3>
+
+            <p class="helper-text">
+              Información básica de los clientes
+            </p>
+          </div>
+
+
+          <button
+            id="btnNuevoCliente"
+            class="btn btn-primary"
+          >
+            + Nuevo cliente
+          </button>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div
+            id="listaClientes"
+            class="clientes-list"
+          >
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- MODAL TRABAJO -->
+  <div
+    id="modalTrabajo"
+    class="modal"
+  >
+
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+
+      <button
+        class="modal-close"
+        data-close-modal="modalTrabajo"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-header">
+
+        <span class="eyebrow">
+          TRABAJO
+        </span>
+
+        <h3 id="tituloModalTrabajo">
+          Nuevo trabajo
+        </h3>
+
+      </div>
+
+
+      <form id="formTrabajo">
+
+        <input
+          id="trabajoId"
+          type="hidden"
+        />
+
+
+        <div class="form-grid">
+
+          <div class="form-group form-full">
+
+            <label for="trabajoNombre">
+              Nombre del trabajo
+            </label>
+
+            <input
+              id="trabajoNombre"
+              type="text"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoCliente">
+              Cliente
+            </label>
+
+            <select
+              id="trabajoCliente"
+              required
+            >
+
+              <option value="">
+                Seleccionar cliente
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoTipo">
+              Tipo
+            </label>
+
+            <select
+              id="trabajoTipo"
+              required
+            >
+
+              <option value="">
+                Seleccionar
+              </option>
+
+              <option value="Cocina">
+                Cocina
+              </option>
+
+              <option value="Closet">
+                Closet
+              </option>
+
+              <option value="Mesa">
+                Mesa
+              </option>
+
+              <option value="Puerta">
+                Puerta
+              </option>
+
+              <option value="Cama">
+                Cama
+              </option>
+
+              <option value="Mueble">
+                Mueble
+              </option>
+
+              <option value="Otro">
+                Otro
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoFechaInicio">
+              Fecha de inicio
+            </label>
+
+            <input
+              id="trabajoFechaInicio"
+              type="date"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoFechaEntrega">
+              Fecha prevista de entrega
+            </label>
+
+            <input
+              id="trabajoFechaEntrega"
+              type="date"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoPrecio">
+              Precio estimado
+            </label>
+
+            <input
+              id="trabajoPrecio"
+              type="number"
+              min="0"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="trabajoEstado">
+              Estado
+            </label>
+
+            <select id="trabajoEstado">
+
+              <option value="Pendiente">
+                Pendiente
+              </option>
+
+              <option value="En proceso">
+                En proceso
+              </option>
+
+              <option value="Completado">
+                Completado
+              </option>
+
+              <option value="Cancelado">
+                Cancelado
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group form-full">
+
+            <label for="trabajoDescripcion">
+              Descripción
+            </label>
+
+            <textarea
+              id="trabajoDescripcion"
+              rows="4"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-close-modal="modalTrabajo"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            Guardar trabajo
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL CLIENTE -->
+  <div
+    id="modalCliente"
+    class="modal"
+  >
+
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+
+      <button
+        class="modal-close"
+        data-close-modal="modalCliente"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-header">
+
+        <span class="eyebrow">
+          CLIENTE
+        </span>
+
+        <h3 id="tituloModalCliente">
+          Nuevo cliente
+        </h3>
+
+      </div>
+
+
+      <form id="formCliente">
+
+        <input
+          id="clienteId"
+          type="hidden"
+        />
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="clienteNombre">
+              Nombre
+            </label>
+
+            <input
+              id="clienteNombre"
+              type="text"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="clienteTelefono">
+              Teléfono
+            </label>
+
+            <input
+              id="clienteTelefono"
+              type="text"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="clienteCorreo">
+              Correo
+            </label>
+
+            <input
+              id="clienteCorreo"
+              type="email"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="clienteDireccion">
+              Dirección
+            </label>
+
+            <input
+              id="clienteDireccion"
+              type="text"
+            />
+
+          </div>
+
+
+          <div class="form-group form-full">
+
+            <label for="clienteNotas">
+              Notas
+            </label>
+
+            <textarea
+              id="clienteNotas"
+              rows="4"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-close-modal="modalCliente"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            Guardar cliente
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODAL DETALLE -->
+  <div
+    id="modalDetalle"
+    class="modal"
+  >
+
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+
+      <button
+        class="modal-close"
+        data-close-modal="modalDetalle"
+      >
+        ×
+      </button>
+
+      <div id="detalleTrabajo">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CONFIRMACIÓN -->
+  <div
+    id="modalConfirmacion"
+    class="modal"
+  >
+
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content modal-small">
+
+      <div class="confirm-icon">
+        !
+      </div>
+
+      <h3>
+        ¿Eliminar este registro?
+      </h3>
+
+      <p>
+        Esta acción no se puede deshacer.
+      </p>
+
+      <div class="form-actions">
+
+        <button
+          id="btnCancelarEliminar"
+          class="btn btn-secondary"
+        >
+          Cancelar
+        </button>
+
+        <button
+          id="btnConfirmarEliminar"
+          class="btn btn-danger"
+        >
+          Eliminar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script src="/app.js"></script>
+
+</body>
+</html>

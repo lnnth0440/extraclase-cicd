@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "nombre": "Carlos Hernández",
+    "telefono": "8888-8888",
+    "correo": "carlos@email.com",
+    "direccion": "Heredia",
+    "notas": "Cliente de cocina integral."
+  },
+  {
+    "id": 2,
+    "nombre": "María Pérez",
+    "telefono": "8777-7777",
+    "correo": "maria@email.com",
+    "direccion": "Playas del Coco",
+    "notas": "Cliente de closet principal."
+  },
+  {
+    "id": 3,
+    "nombre": "José Rodríguez",
+    "telefono": "8666-6666",
+    "correo": "jose@email.com",
+    "direccion": "San José",
+    "notas": "Cliente de mesa de comedor."
+  },
+  {
+    "id": 4,
+    "nombre": "Ana Vargas",
+    "telefono": "8822-2398",
+    "correo": "ana.vargas@email.com",
+    "direccion": "Liberia",
+    "notas": "Cliente interesada en trabajos personalizados de madera para vivienda."
+  },
+  {
+    "id": 5,
+    "nombre": "Roberto Castro",
+    "telefono": "8777-2244",
+    "correo": "roberto.chaves@email.com",
+    "direccion": "Alajuela",
+    "notas": "Cliente interesado en mobiliario para comedor."
+  }
+]
