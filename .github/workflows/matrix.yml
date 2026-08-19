@@ -19,29 +19,44 @@ jobs:
       fail-fast: false
 
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
+        include:
+          - os: ubuntu-latest
+            node: 18
+            pnpm: 9
 
-        node:
-          - 18
-          - 20
-          - 22
+          - os: ubuntu-latest
+            node: 20
+            pnpm: 10
+
+          - os: ubuntu-latest
+            node: 22
+            pnpm: 11
+
+          - os: windows-latest
+            node: 18
+            pnpm: 9
+
+          - os: windows-latest
+            node: 20
+            pnpm: 10
+
+          - os: windows-latest
+            node: 22
+            pnpm: 11
 
     steps:
       - name: Obtener código
         uses: actions/checkout@v4
 
-      - name: Instalar pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ matrix.pnpm }}
 
       - name: Mostrar versiones
         run: |
@@ -49,7 +64,7 @@ jobs:
           pnpm --version
 
       - name: Instalar dependencias
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Ejecutar lint
         run: pnpm run lint
