@@ -10,6 +10,14 @@ import {
   guardarClientes
 } from "./services/clientesService.js";
 
+import {
+  generarNuevoId,
+  clienteExiste,
+  filtrarTrabajos,
+  calcularEstadisticas,
+  clienteTieneTrabajos
+} from "./utils/trabajosUtils.js";
+
 const app = express();
 
 app.use(express.json());
@@ -23,25 +31,14 @@ app.use(express.static("src/public"));
 app.get("/api/trabajos", (req, res) => {
   const trabajos = obtenerTrabajos();
 
-  const buscar = req.query.buscar?.toLowerCase();
+  const buscar = req.query.buscar;
   const estado = req.query.estado;
 
-  let resultados = trabajos;
-
-  if (buscar) {
-    resultados = resultados.filter((trabajo) => {
-      return (
-        trabajo.nombre.toLowerCase().includes(buscar) ||
-        trabajo.cliente.toLowerCase().includes(buscar)
-      );
-    });
-  }
-
-  if (estado) {
-    resultados = resultados.filter(
-      (trabajo) => trabajo.estado === estado
-    );
-  }
+  const resultados = filtrarTrabajos(
+    trabajos,
+    buscar,
+    estado
+  );
 
   res.json(resultados);
 });
@@ -49,6 +46,7 @@ app.get("/api/trabajos", (req, res) => {
 
 app.get("/api/trabajos/:id", (req, res) => {
   const id = Number(req.params.id);
+
   const trabajos = obtenerTrabajos();
 
   const trabajo = trabajos.find(
@@ -87,25 +85,19 @@ app.post("/api/trabajos", (req, res) => {
     });
   }
 
-  const clienteExiste = clientes.some(
-    (item) => item.nombre === cliente
+  const existeCliente = clienteExiste(
+    clientes,
+    cliente
   );
 
-  if (!clienteExiste) {
+  if (!existeCliente) {
     return res.status(400).json({
       mensaje:
         "El cliente seleccionado no está registrado"
     });
   }
 
-  const nuevoId =
-    trabajos.length > 0
-      ? Math.max(
-          ...trabajos.map(
-            (trabajo) => trabajo.id
-          )
-        ) + 1
-      : 1;
+  const nuevoId = generarNuevoId(trabajos);
 
   const nuevoTrabajo = {
     id: nuevoId,
@@ -155,11 +147,12 @@ app.put("/api/trabajos/:id", (req, res) => {
   } = req.body;
 
   if (cliente !== undefined) {
-    const clienteExiste = clientes.some(
-      (item) => item.nombre === cliente
+    const existeCliente = clienteExiste(
+      clientes,
+      cliente
     );
 
-    if (!clienteExiste) {
+    if (!existeCliente) {
       return res.status(400).json({
         mensaje:
           "El cliente seleccionado no está registrado"
@@ -201,6 +194,7 @@ app.put("/api/trabajos/:id", (req, res) => {
 
 app.delete("/api/trabajos/:id", (req, res) => {
   const id = Number(req.params.id);
+
   const trabajos = obtenerTrabajos();
 
   const indice = trabajos.findIndex(
@@ -239,6 +233,7 @@ app.get("/api/clientes", (req, res) => {
 
 app.get("/api/clientes/:id", (req, res) => {
   const id = Number(req.params.id);
+
   const clientes = obtenerClientes();
 
   const cliente = clientes.find(
@@ -273,10 +268,9 @@ app.post("/api/clientes", (req, res) => {
     });
   }
 
-  const nombreDuplicado = clientes.some(
-    (cliente) =>
-      cliente.nombre.toLowerCase() ===
-      nombre.toLowerCase()
+  const nombreDuplicado = clienteExiste(
+    clientes,
+    nombre
   );
 
   if (nombreDuplicado) {
@@ -286,14 +280,7 @@ app.post("/api/clientes", (req, res) => {
     });
   }
 
-  const nuevoId =
-    clientes.length > 0
-      ? Math.max(
-          ...clientes.map(
-            (cliente) => cliente.id
-          )
-        ) + 1
-      : 1;
+  const nuevoId = generarNuevoId(clientes);
 
   const nuevoCliente = {
     id: nuevoId,
@@ -370,11 +357,6 @@ app.put("/api/clientes/:id", (req, res) => {
   cliente.notas =
     notas ?? cliente.notas;
 
-  /*
-    Si cambia el nombre del cliente,
-    actualizamos sus trabajos.
-  */
-
   if (
     nombre &&
     nombre !== nombreAnterior
@@ -414,10 +396,11 @@ app.delete("/api/clientes/:id", (req, res) => {
 
   const cliente = clientes[indice];
 
-  const tieneTrabajos = trabajos.some(
-    (trabajo) =>
-      trabajo.cliente === cliente.nombre
-  );
+  const tieneTrabajos =
+    clienteTieneTrabajos(
+      trabajos,
+      cliente.nombre
+    );
 
   if (tieneTrabajos) {
     return res.status(400).json({
@@ -446,27 +429,8 @@ app.delete("/api/clientes/:id", (req, res) => {
 app.get("/api/dashboard", (req, res) => {
   const trabajos = obtenerTrabajos();
 
-  const total = trabajos.length;
-
-  const pendientes = trabajos.filter(
-    (trabajo) =>
-      trabajo.estado === "Pendiente"
-  ).length;
-
-  const enProceso = trabajos.filter(
-    (trabajo) =>
-      trabajo.estado === "En proceso"
-  ).length;
-
-  const completados = trabajos.filter(
-    (trabajo) =>
-      trabajo.estado === "Completado"
-  ).length;
-
-  const cancelados = trabajos.filter(
-    (trabajo) =>
-      trabajo.estado === "Cancelado"
-  ).length;
+  const estadisticas =
+    calcularEstadisticas(trabajos);
 
   const trabajosRecientes =
     [...trabajos]
@@ -474,11 +438,7 @@ app.get("/api/dashboard", (req, res) => {
       .slice(0, 5);
 
   res.json({
-    total,
-    pendientes,
-    enProceso,
-    completados,
-    cancelados,
+    ...estadisticas,
     trabajosRecientes
   });
 });

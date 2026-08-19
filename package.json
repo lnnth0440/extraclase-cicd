@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
-    "lint": "eslint ."
-  },
+  "start": "node src/server.js",
+  "dev": "node --watch src/server.js",
+  "lint": "eslint .",
+  "test": "vitest run",
+  "coverage": "vitest run --coverage"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,6 +25,8 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "eslint": "^10.8.1"
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.8.1",
+    "vitest": "^4.1.11"
   }
 }
