@@ -11,52 +11,35 @@ on:
 
 jobs:
   test-matrix:
-    name: Node ${{ matrix.node }} - ${{ matrix.os }}
+    name: Node ${{ matrix.node-version }} - ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
-
       matrix:
-        include:
-          - os: ubuntu-latest
-            node: 18
-            pnpm: 11
-
-          - os: ubuntu-latest
-            node: 20
-            pnpm: 11
-
-          - os: ubuntu-latest
-            node: 22
-            pnpm: 11
-
-          - os: windows-latest
-            node: 18
-            pnpm: 11
-
-          - os: windows-latest
-            node: 20
-            pnpm: 11
-
-          - os: windows-latest
-            node: 22
-            pnpm: 11
+        node-version:
+          - 18
+          - 20
+          - 22
+        os:
+          - ubuntu-latest
+          - windows-latest
 
     steps:
       - name: Obtener código
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-
       - name: Instalar pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ matrix.pnpm }}
+          version: 11
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: Mostrar versiones
         run: |
@@ -64,7 +47,7 @@ jobs:
           pnpm --version
 
       - name: Instalar dependencias
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Ejecutar lint
         run: pnpm run lint
