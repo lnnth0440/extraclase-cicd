@@ -288,8 +288,6 @@ Ctrl + C
 
 ## Scripts disponibles
 
-Los scripts principales definidos en `package.json` permiten ejecutar las tareas habituales del proyecto.
-
 ### Iniciar la aplicación
 
 ```powershell
@@ -415,7 +413,7 @@ Este mismo proceso se ejecuta automáticamente dentro del workflow de Integraci�
 
 Uno de los objetivos principales del proyecto es implementar un flujo automatizado de **Integración Continua (CI)** y **Despliegue Continuo (CD)**.
 
-GitHub Actions es utilizado como plataforma de automatización y Render como servicio de alojamiento de la aplicación.
+GitHub Actions se utiliza como plataforma de automatización y Render como servicio de alojamiento de la aplicación.
 
 ---
 
@@ -427,7 +425,7 @@ La configuración de Integración Continua se encuentra en:
 .github/workflows/ci.yml
 ```
 
-El workflow se ejecuta automáticamente ante eventos como:
+El workflow se ejecuta automáticamente ante:
 
 - push hacia `main`;
 - push hacia `develop`;
@@ -446,6 +444,8 @@ Durante la ejecución se realizan las siguientes etapas:
 
 Si alguna validación o prueba falla, la ejecución del workflow finaliza con error.
 
+Los propios status checks de GitHub permiten identificar visualmente si la ejecución fue satisfactoria o si alguna etapa presentó un fallo.
+
 Esto permite detectar problemas en el proyecto antes de realizar un despliegue hacia producción.
 
 ---
@@ -463,9 +463,9 @@ Su configuración se encuentra en:
 Se prueban las siguientes versiones de Node.js:
 
 ```text
-Node.js 18
-Node.js 20
 Node.js 22
+Node.js 23
+Node.js 24
 ```
 
 en los sistemas operativos:
@@ -477,7 +477,7 @@ Windows
 
 Esto produce un total de **seis combinaciones de ejecución**:
 
-| Sistema operativo | Node 18 | Node 20 | Node 22 |
+| Sistema operativo | Node 22 | Node 23 | Node 24 |
 |---|---:|---:|---:|
 | Ubuntu | ✓ | ✓ | ✓ |
 | Windows | ✓ | ✓ | ✓ |
@@ -502,11 +502,22 @@ La configuración del proceso de Despliegue Continuo se encuentra en:
 .github/workflows/cd.yml
 ```
 
-El workflow de CD se ejecuta después de que el proceso de Integración Continua finaliza correctamente sobre la rama `main`.
+El workflow de CD se ejecuta únicamente después de que el proceso de Integración Continua finaliza correctamente sobre la rama `main`.
 
-Para realizar el despliegue se utilizan:
+Una vez que CI valida el cambio, el workflow de CD descarga el código correspondiente al commit aprobado y genera un paquete desplegable llamado:
+
+```text
+extraclase-cicd.tar.gz
+```
+
+El paquete contiene los elementos necesarios de la aplicación y se almacena como artifact dentro de GitHub Actions.
+
+De esta forma, el proceso de CD construye y conserva un artefacto desplegable antes de iniciar la publicación en producción.
+
+Posteriormente, el workflow utiliza:
 
 - GitHub Actions;
+- GitHub Artifacts;
 - GitHub Environments;
 - GitHub Secrets;
 - Render Deploy Hook.
@@ -517,15 +528,17 @@ El Environment utilizado para producción se denomina:
 production
 ```
 
-Este entorno está configurado para controlar el despliegue correspondiente a la rama principal del proyecto.
+Este entorno incluye una regla de protección con tiempo de espera y permite el despliegue únicamente desde la rama principal.
 
-La URL del Deploy Hook de Render se almacena de forma segura en GitHub mediante el secreto:
+La URL del Deploy Hook de Render se almacena de forma segura mediante el secreto:
 
 ```text
 RENDER_DEPLOY_HOOK_URL
 ```
 
 De esta manera, la URL utilizada para activar el despliegue no se expone directamente dentro del código fuente ni en los archivos del repositorio.
+
+Una vez generado y almacenado el artefacto, GitHub Actions utiliza el Deploy Hook para solicitar a Render una nueva publicación de la aplicación.
 
 ---
 
@@ -546,17 +559,27 @@ Cambio en el código
  GitHub Actions
         │
         ▼
-  Integración Continua
+Integración Continua
         │
         ├── ESLint
         ├── Pruebas unitarias
         └── Coverage
         │
         ▼
-     CI exitoso
+    CI exitoso
         │
         ▼
- Despliegue Continuo
+Descargar commit validado
+        │
+        ▼
+Construir artefacto desplegable
+extraclase-cicd.tar.gz
+        │
+        ▼
+Subir artifact
+        │
+        ▼
+Despliegue Continuo
         │
         ▼
 Environment: production
@@ -571,7 +594,7 @@ Environment: production
 Aplicación actualizada
 ```
 
-Con este flujo, los cambios enviados a la rama principal deben superar primero las validaciones automáticas antes de continuar hacia el despliegue de producción.
+Con este flujo, los cambios enviados a la rama principal deben superar primero las validaciones automáticas de CI. Solo después de una ejecución satisfactoria se genera el artefacto desplegable y se continúa con el proceso de publicación en producción.
 
 ---
 
@@ -597,15 +620,19 @@ pnpm start
 
 El servidor utiliza la variable de entorno `PORT` proporcionada por Render al ejecutarse en producción.
 
+El Auto-Deploy de Render se mantiene desactivado, por lo que el despliegue es iniciado mediante el Deploy Hook utilizado por el workflow de CD de GitHub Actions.
+
+De esta forma, Render no publica automáticamente cada push realizado al repositorio; el despliegue ocurre después de que CI finaliza correctamente y el workflow de CD solicita la nueva publicación.
+
 Debido a que el proyecto utiliza una instancia gratuita de Render, el servicio puede entrar en estado de inactividad después de permanecer cierto tiempo sin solicitudes.
 
 Por esta razón, la primera carga después de un período de inactividad puede tardar algunos segundos adicionales.
 
 ---
 
-## Resumen del flujo de desarrollo
+## Flujo habitual de desarrollo
 
-El flujo habitual para realizar cambios en el proyecto es:
+El flujo utilizado para realizar cambios en el proyecto es:
 
 ```text
 Desarrollo local
@@ -620,13 +647,16 @@ Pruebas unitarias
      Git
       │
       ▼
-    GitHub
+   GitHub
       │
       ▼
 GitHub Actions
       │
       ▼
      CI
+      │
+      ▼
+Artifact desplegable
       │
       ▼
      CD
@@ -636,6 +666,18 @@ GitHub Actions
 ```
 
 Este proceso permite automatizar tareas que, de otra manera, tendrían que realizarse manualmente cada vez que se modifica la aplicación.
+
+---
+
+## Enlaces del proyecto
+
+### Repositorio de GitHub
+
+https://github.com/lnnth0440/extraclase-cicd
+
+### Aplicación desplegada
+
+https://extraclase-cicd.onrender.com
 
 ---
 
@@ -674,9 +716,10 @@ El proyecto demuestra la aplicación práctica de conceptos relacionados con:
 - pruebas unitarias;
 - cobertura de código;
 - análisis estático;
+- artifacts de GitHub Actions;
 - matrices de compatibilidad;
 - manejo de secretos;
-- ambientes de despliegue;
+- environments de despliegue;
 - Integración Continua;
 - Despliegue Continuo;
 - publicación de una aplicación web en Render.
