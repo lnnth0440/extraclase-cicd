@@ -22,11 +22,11 @@ jobs:
         include:
           - os: ubuntu-latest
             node: 18
-            pnpm: 9
+            pnpm: 11
 
           - os: ubuntu-latest
             node: 20
-            pnpm: 10
+            pnpm: 11
 
           - os: ubuntu-latest
             node: 22
@@ -34,11 +34,11 @@ jobs:
 
           - os: windows-latest
             node: 18
-            pnpm: 9
+            pnpm: 11
 
           - os: windows-latest
             node: 20
-            pnpm: 10
+            pnpm: 11
 
           - os: windows-latest
             node: 22
