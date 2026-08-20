@@ -687,6 +687,6 @@ La aplicación de ebanistería funciona como caso práctico para integrar estos 
 
 ## Autora
 
-**Jendry Linneth Murillo Pérez**  
+**Jendry Murillo Pérez**  
 Programación IV  
 II Cuatrimestre, 2026
